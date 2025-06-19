@@ -1,0 +1,38 @@
+{% extends 'registration/base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white shadow rounded-lg mt-6">
+  <h1 class="text-4xl font-bold text-indigo-800 mb-2">{{ startup.name }}</h1>
+  
+  <p class="text-sm text-gray-500 mb-6">
+    {% if startup.founded_year %}Founded: {{ startup.founded_year }}{% endif %}
+    {% if startup.closed_year %} | Closed: {{ startup.closed_year }}{% endif %}
+  </p>
+
+  {% if startup.industry %}
+    <p class="mb-4"><span class="font-semibold text-gray-700">Industry:</span> {{ startup.industry }}</p>
+  {% endif %}
+
+  <div class="mb-6">
+    <h2 class="text-lg font-semibold text-gray-700 mb-1">Description</h2>
+    <p class="text-gray-800 leading-relaxed">{{ startup.description }}</p>
+  </div>
+
+  {% if startup.failure_reason %}
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-red-700 mb-1">Reason for Failure</h2>
+      <p class="text-red-600 leading-relaxed">{{ startup.failure_reason }}</p>
+    </div>
+  {% endif %}
+
+  {% if startup.lessons_learned %}
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold text-green-700 mb-1">Lessons Learned</h2>
+      <p class="text-green-700 leading-relaxed">{{ startup.lessons_learned }}</p>
+    </div>
+  {% endif %}
+
+  <a href="{% url 'dashboard' %}" class="inline-block mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded">
+    ← Back to Dashboard
+  </a>
+</div>
+{% endblock %}

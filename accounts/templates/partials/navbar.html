@@ -1,0 +1,40 @@
+{% load static %}
+<nav class="bg-[#2C2C2C] border-b shadow px-6 py-4 flex items-center justify-between">
+  <div class="flex items-center space-x-8">
+    <div class="text-white text-2xl font-bold flex items-center">
+      <img src="{% static 'images/Startup_graveyard_logo.png' %}" alt="Logo" class="w-10 h-10 mr-2">
+      Startup Graveyard
+    </div>
+  </div>
+
+  <div class="flex items-center space-x-6">
+      <!-- 🔽 Dropdown Results -->
+      <ul id="searchResults"
+          class="absolute left-0 right-0 bg-white z-50 border rounded mt-1 hidden max-h-60 overflow-y-auto shadow text-sm">
+        {% for startup in recent_startups %}
+        <li data-name="{{ startup.name|lower }}"
+            data-url="{% url 'startup_detail' slug=startup.slug %}"
+            class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+          {{ startup.name }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- 👤 Profile Dropdown -->
+    <div class="relative">
+      <img src="{% static 'images/user-icon.png' %}" alt="Profile" id="profile-icon"
+           class="w-10 h-10 rounded-full cursor-pointer border border-gray-300">
+      <div id="profile-dropdown"
+           class="hidden absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10">
+        <div class="px-4 py-2 border-b font-semibold text-gray-700">
+          {{ request.user.username }}
+        </div>
+        <form method="POST" action="{% url 'logout' %}" class="px-4 py-2">
+          {% csrf_token %}
+          <button type="submit" class="w-full text-left text-red-600 hover:underline">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,51 @@
+{% extends 'registration/base_auth.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-blue-100 px-4">
+  <div class="w-full max-w-3xl bg-white border border-gray-200 rounded-xl shadow-xl px-8 py-12">
+    <h2 class="text-3xl sm:text-2xl font-bold text-center text-indigo-700 mb-6">Log In</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="mb-4 text-sm text-red-600 bg-red-100 p-3 rounded transition-all duration-200">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-1">{{ field.label }}</label>
+
+          {% if field.name == 'password' %}
+          <div class="relative">
+            {{ field|add_class:"w-full text-base px-3 py-3 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+            <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500" onclick="togglePassword('{{ field.auto_id }}')">
+              👁️
+            </button>
+          </div>
+          {% else %}
+            {{ field|add_class:"w-full text-base px-3 py-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% endif %}
+
+          {% if field.errors %}
+            <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition">
+        Log In
+      </button>
+    </form>
+
+    <p class="text-center text-sm mt-4 text-gray-600">
+      Don't have an account?
+      <a href="{% url 'signup' %}" class="text-blue-600 hover:underline">Sign Up</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

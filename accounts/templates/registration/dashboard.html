@@ -1,0 +1,135 @@
+{% extends 'registration/base.html' %}
+{% block content %}
+{% load static %}
+<div class="relative">
+    <!-- Left Arrow -->
+    <button onclick="scrollCarousel('left')" class="absolute left-0 z-10 bg-white rounded-full shadow p-2 top-1/2 -translate-y-1/2 hidden sm:block">
+      ←
+    </button>
+
+    <!-- Carousel Container -->
+    <div id="carousel" class="flex overflow-x-auto space-x-6 px-6 py-4 scroll-smooth">
+      {% for startup in recent_startups %}
+      <a href="{% url 'startup_detail' slug=startup.slug %}" class="min-h-[200px] min-w-[300px] sm:min-w-[350px] sm:min-h-[300px] bg-[#F5F5F5] rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300 flex flex-col items-center justify-center text-center space-y-3">
+        {% if startup.logo %}
+          <img src="{{ startup.logo.url }}" alt="{{ startup.name }}" class="w-16 h-16 object-contain rounded-full">
+        {% else %}
+          <img src="{% static 'images/placeholder.jpg' %}" alt="No logo" class="w-16 h-16 object-contain rounded-full">
+        {% endif %}
+        <h3 class="text-[#2C2C2C] text-xl font-semibold">{{ startup.name }}</h3>
+      </a>
+      {% empty %}
+        <p class="text-gray-600">No startups added yet.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Right Arrow -->
+    <button onclick="scrollCarousel('right')" class="absolute right-0 z-10 bg-white rounded-full shadow p-2 top-1/2 -translate-y-1/2 hidden sm:block">
+      →
+    </button>
+</div>
+
+<div class="p-6 max-w-7xl mx-auto">
+  <h2 class="text-3xl font-bold mb-6 text-indigo-800 text-center">Explore Startups by Industry</h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for industry, startups in categories.items %}
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <!-- Industry header -->
+        <div class="bg-black text-white px-4 py-2 text-sm font-mono uppercase tracking-wide">
+          {{ industry }}
+        </div>
+
+        <ul class="px-4 pb-4 text-sm text-gray-800 space-y-2">
+          {% for startup in startups %}
+            {% if forloop.first %}
+              <!-- Featured -->
+              <a href="{% url 'startup_detail' slug=startup.slug %}">
+                {% if startup.logo %}
+                  <img src="{{ startup.logo.url }}" alt="{{ startup.name }}" class="w-full h-48 object-contain bg-white">
+                {% else %}
+                  <img src="{% static 'images/placeholder.jpg' %}" alt="No logo" class="w-full h-48 object-cover">
+                {% endif %}
+                <h2 class="text-lg font-semibold text-black px-4 mt-3 mb-2 hover:underline">
+                  {{ startup.name }}
+                </h2>
+              </a>
+            {% else %}
+              {% if forloop.counter <= 4 %}
+              <li class="border-t pt-2">
+                <a href="{% url 'startup_detail' slug=startup.slug %}" class="hover:underline font-medium">
+                  {{ startup.name }}
+                </a>
+              </li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<h2 class="text-2xl font-bold mt-16 mb-4 text-[#2C2C2C]">
+  Latest News on <span class="text-[#FF6F61]">Startup Failures</span>
+</h2>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for article in news_articles %}
+    <a href="{{ article.url }}" target="_blank" class="block bg-white rounded-xl shadow p-4 hover:shadow-lg transition">
+      {% if article.urlToImage %}
+      <img src="{{ article.urlToImage }}" alt="" class="h-40 w-full object-cover rounded mb-3">
+      {% endif %}
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ article.title }}</h3>
+      <p class="text-sm text-gray-600">{{ article.source.name }}</p>
+    </a>
+  {% endfor %}
+</div>
+
+<div class="mt-16 mx-auto rounded-xl p-6 text-center">
+  <h2 class="text-2xl sm:text-3xl font-bold text-[#FF6F61] mb-2">
+    Know a Failed Startup?
+  </h2>
+  <p class="text-gray-700 text-lg mb-6">
+    Share their story to help others learn from it. Add a startup to the graveyard.
+  </p>
+  <a href="{% url 'submit_startup' %}"
+     class="inline-block bg-[#2C2C2C] hover:bg-[#FF6F61] text-white text-lg font-semibold px-6 py-3 rounded-full shadow-md transition duration-300">
+    + Submit a Startup
+  </a>
+</div>
+
+<footer class="bg-[#2C2C2C] text-white px-4 py-12 text-center">
+  <!-- Logo Image Centered -->
+  <img src="{% static 'images/Startup_graveyard_logo.png' %}" alt="Logo"
+       class="mx-auto w-14 h-14 mb-4">
+
+  <!-- Brand Text -->
+  <div class="text-3xl font-black tracking-widest mb-4">
+    STARTUP GRAVEYARD
+  </div>
+
+  <!-- Description -->
+  <p class="max-w-2xl mx-auto text-gray-300 text-sm sm:text-base leading-relaxed">
+    Startup Graveyard is where past ventures rest, and future founders learn. We curate stories of failed startups so you can uncover what went wrong — and how to do it better. Because every failure is a lesson, and every ending a new beginning.
+  </p>
+  <p class="text-xs text-gray-300 mt-14">
+      &copy; 2025 Startup Graveyard
+    </p>
+    <p class="text-xs text-gray-300 mt-2">
+      Disclaimer: All content on this site is fictional and created for educational and portfolio purposes only. Any resemblance to real companies is purely coincidental.
+    </p>
+</footer>
+
+<script>
+  function scrollCarousel(direction) {
+    const container = document.getElementById('carousel');
+    const scrollAmount = 350;
+
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  }
+</script>
+{% endblock %}

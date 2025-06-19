@@ -1,0 +1,43 @@
+{% extends 'registration/base_auth.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg px-8 py-12">
+    <h2 class="text-3xl font-bold text-center mb-6">Sign Up</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-1">{{ field.label }}</label>
+          
+          {% if field.name == 'password1' or field.name == 'password2' %}
+          <div class="relative">
+            {{ field|add_class:"w-full px-3 py-2 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+            <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500" onclick="togglePassword('{{ field.auto_id }}')">
+              👁️
+            </button>
+          </div>
+          {% else %}
+            {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% endif %}
+
+          {% if field.errors %}
+            <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+        Create Account
+      </button>
+    </form>
+
+    <p class="text-center text-sm mt-4 text-gray-600">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Log In</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
