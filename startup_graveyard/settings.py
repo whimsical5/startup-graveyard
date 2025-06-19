@@ -185,3 +185,8 @@ USE_TZ = True
 
 # --- Auto Field ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if os.environ.get('RUN_MIGRATE_ON_DEPLOY') == 'true':
+    from django.core.management import call_command
+    call_command('migrate')
+    call_command('collectstatic', interactive=False, verbosity=0)
